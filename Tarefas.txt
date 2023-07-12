@@ -1,0 +1,16 @@
+O que falta de mínimo : 
+
+1- alguns dados do registro não são guardados pois não sei como pegar o id de um modelo e jogar em outro modelo ( mas é pouco a ser feito )
+https://sebhastian.com/sequelize-foreign-key/
+
+2 - o admin tem que mostrar todos os utilizadores e dar a opção de ver o perfil ( mas podemos retirar isso ) e deletar o utilizador por completo 
+
+3 - estatísticas atualmente não existem, mas devem ser acrescentadas logo abaixo no início
+
+4 - botões de edit e excluir a funcionar ( não é mínimo )
+
+5 - passagem do método de pagamento para o pagamento em si onde carrega em pagar 
+
+6 - permitir anexar contratos
+
+7 - adicionar alguns atributos a base de dados
