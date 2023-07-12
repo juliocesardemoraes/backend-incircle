@@ -20,7 +20,6 @@ app.use((req, res, next) => {
 });
 
 //Rotas
-
 app.use("/user", userRouters);
 app.use("/offer", offerRouters);
 
