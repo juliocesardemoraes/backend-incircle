@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const userRouters = require("./routes/userRoute.js");
 const offerRouters = require("./routes/offerRoute.js");
+const formRouters = require("./routes/formRoute.js");
+const roleRouters = require("./routes/roleRoute.js");
 
 //Configurações
 app.set("port", process.env.PORT || 3000);
@@ -22,6 +24,8 @@ app.use((req, res, next) => {
 //Rotas
 app.use("/user", userRouters);
 app.use("/offer", offerRouters);
+app.use("/form", formRouters);
+app.use("/role", roleRouters);
 
 app.use("/teste", (req, res) => {
   res.send("Rota TESTE.");
