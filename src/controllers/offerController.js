@@ -8,10 +8,10 @@ var UserRole = require("../model/UserRole");
 var Contract = require("../model/Contract");
 var sequelize = require("../model/database");
 
-const controller2 = {};
+const controller = {};
 //sequelize.sync()
 
-controller2.list = async (req, res) => {
+controller.list = async (req, res) => {
   const data = await Offer.findAll({
     include: [User],
   })
@@ -24,19 +24,21 @@ controller2.list = async (req, res) => {
   res.json({ success: true, data: data });
 };
 
-controller2.create = async (req, res) => {
+controller.create = async (req, res) => {
   // data
   const { quantity, priceEnergy, totalPrice, UserUserId } = req.body;
   const publishDate = new Date();
+  const updateDate = new Date();
+  // User.findAll
   // create
   const data = await Offer.create({
     quantity: quantity,
     priceEnergy: priceEnergy,
     totalPrice: totalPrice,
-    UserUserId: 2,
+    UserUserId: 1,
     publishDate: publishDate,
+    updateDate: updateDate,
   })
-
     .then(function (data) {
       return data;
     })
@@ -52,4 +54,45 @@ controller2.create = async (req, res) => {
   });
 };
 
-module.exports = controller2;
+controller.update = async (req, res) => {
+  if (req.body?.id == null) {
+    res.status(400).json({
+      success: false,
+      message: "Requisição má formulada. Falta o id na requisição",
+    });
+    return;
+  }
+
+  const updateDate = new Date();
+
+  try {
+    const offerUpdate = await Offer.update(
+      {
+        quantity: req.body.quantity,
+        totalPrice: req.body.totalPrice,
+        updateDate: updateDate,
+      },
+      {
+        where: { offerId: req.body.id },
+      }
+    );
+    if (offerUpdate === 1) {
+      res.status(200).json({
+        success: true,
+        message: "Usuario atualizado com sucesso",
+      });
+    } else if (offerUpdate == 0) {
+      res.status(400).json({
+        success: false,
+        message: "Requisição má formulada. Usuario pode não existir",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Erro no servidor",
+    });
+  }
+};
+
+module.exports = controller;
