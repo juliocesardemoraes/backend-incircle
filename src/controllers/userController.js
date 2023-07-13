@@ -7,6 +7,7 @@ var Role = require("../model/Role");
 var UserRole = require("../model/UserRole");
 var Contract = require("../model/Contract");
 var sequelize = require("../model/database");
+const { cryptoPassword, comparePassword } = require("../utils/passwordHash");
 
 const controller = {};
 sequelize.sync();
@@ -38,14 +39,13 @@ controller.create = async (req, res) => {
   const data = await User.create({
     name: name,
     email: email,
-    password: password,
+    password: await cryptoPassword(password),
     address: address,
     codigoPostal: codigoPostal,
     distrito: distrito,
     photo: photo,
     roleId: role,
   })
-
     .then(function (data) {
       return data;
     })
@@ -79,6 +79,23 @@ controller.delete = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Erro no servidor",
+    });
+  }
+};
+
+controller.auth = async (req, res) => {
+  const user = await User.findOne({ where: { email: req.body.email } });
+  const isEqual = await comparePassword(req.body.password, user.password);
+
+  if (isEqual) {
+    res.status(200).json({
+      success: true,
+      message: "Acesso permitido!",
+    });
+  } else {
+    res.status(503).json({
+      success: false,
+      message: "Acesso Inválido",
     });
   }
 };
