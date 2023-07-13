@@ -62,6 +62,8 @@ controller.update = async (req, res) => {
     });
     return;
   }
+  console.log("------------------");
+  console.log(req.body);
 
   const updateDate = new Date();
 
@@ -70,21 +72,24 @@ controller.update = async (req, res) => {
       {
         quantity: req.body.quantity,
         totalPrice: req.body.totalPrice,
+        priceEnergy: req.body.priceEnergy,
         updateDate: updateDate,
       },
       {
         where: { offerId: req.body.id },
       }
     );
-    if (offerUpdate === 1) {
+    console.log("offerUpdate", offerUpdate);
+
+    if (offerUpdate == 1) {
       res.status(200).json({
         success: true,
-        message: "Usuario atualizado com sucesso",
+        message: "Oferta atualizada com sucesso",
       });
     } else if (offerUpdate == 0) {
       res.status(400).json({
         success: false,
-        message: "Requisição má formulada. Usuario pode não existir",
+        message: "Requisição má formulada. Verifique os campos",
       });
     }
   } catch (error) {
