@@ -4,6 +4,7 @@ const userRouters = require("./routes/userRoute.js");
 const offerRouters = require("./routes/offerRoute.js");
 const formRouters = require("./routes/formRoute.js");
 const roleRouters = require("./routes/roleRoute.js");
+const infrastructureRouters = require("./routes/infrastructureRoute.js");
 
 //Configurações
 app.set("port", process.env.PORT || 3000);
@@ -26,6 +27,8 @@ app.use("/user", userRouters);
 app.use("/offer", offerRouters);
 app.use("/form", formRouters);
 app.use("/role", roleRouters);
+app.use("/infrastructure", infrastructureRouters);
+
 
 app.use("/teste", (req, res) => {
   res.send("Rota TESTE.");
@@ -37,6 +40,7 @@ app.use("/", (req, res) => {
 // importação de rotas [1]
 
 //Rota
+
 app.listen(app.get("port"), () => {
   console.log("Start server on port " + app.get("port"));
 });

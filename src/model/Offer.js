@@ -1,7 +1,7 @@
-var Sequelize = require("sequelize");
-var sequelize = require("./database");
+var Sequelize = require('sequelize');
+var sequelize = require('./database');
 
-const User = require("./User");
+const User = require('./User');
 
 const Offer = sequelize.define(
   "Offer",
@@ -21,8 +21,9 @@ const Offer = sequelize.define(
     timestamps: false,
   }
 );
+  
+  Offer.belongsTo(User);
+  User.hasMany(Offer);
+ 
 
-Offer.belongsTo(User);
-User.hasMany(Offer);
-
-module.exports = Offer;
+  module.exports = Offer;

@@ -45,6 +45,7 @@ controller.create = async (req, res) => {
     photo: photo,
     roleId: role,
   })
+
     .then(function (data) {
       return data;
     })
@@ -52,7 +53,6 @@ controller.create = async (req, res) => {
       console.log("Erro: " + error);
       return error;
     });
-
   // return res
   res.status(200).json({
     success: true,
@@ -67,12 +67,12 @@ controller.delete = async (req, res) => {
     if (deleteUser == 1) {
       res.status(200).json({
         success: true,
-        message: "Usuario deletado com sucesso!",
+        message: "Utilizador deletado com sucesso!",
       });
     } else if (deleteUser == 0) {
       res.status(400).json({
         success: false,
-        message: "Requisição má formulada. Usuario pode não existir",
+        message: "Requisição má formulada. Utilizador pode não existir",
       });
     }
   } catch (error) {

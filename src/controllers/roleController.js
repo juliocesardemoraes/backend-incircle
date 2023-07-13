@@ -3,7 +3,6 @@ var User = require("../model/User");
 var sequelize = require("../model/database");
 
 const controller = {};
-sequelize.sync();
 
 controller.create = async (req, res) => {
   const { nameRole } = req.body;

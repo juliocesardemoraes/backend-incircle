@@ -1,8 +1,10 @@
-var Sequelize = require('sequelize');
-var sequelize = require('./database');
-const User = require('./User');
+var Sequelize = require("sequelize");
+var sequelize = require("./database");
+const User = require("./User");
 
-const Infrastructure = sequelize.define('Infrastructure', {
+const Infrastructure = sequelize.define(
+  "Infrastructure",
+  {
     infrastructureId: {
       type: Sequelize.INTEGER,
       primaryKey: true,
@@ -10,14 +12,14 @@ const Infrastructure = sequelize.define('Infrastructure', {
     },
     capacity: Sequelize.FLOAT,
     productionType: Sequelize.STRING,
-    ProductionArea: Sequelize.STRING,
-    
-  }, {
-    timestamps: false
+    productionArea: Sequelize.STRING,
+  },
+  {
+    timestamps: false,
   }
-  );
+);
 
-  Infrastructure.belongsTo(User);
-  User.hasOne(Infrastructure);
+Infrastructure.belongsTo(User);
+User.hasOne(Infrastructure);
 
-  module.exports = Infrastructure;
+module.exports = Infrastructure;
