@@ -5,9 +5,10 @@ const offerRouters = require("./routes/offerRoute.js");
 const formRouters = require("./routes/formRoute.js");
 const roleRouters = require("./routes/roleRoute.js");
 const infrastructureRouters = require("./routes/infrastructureRoute.js");
+const contractRouters = require("./routes/contractRoute.js");
 
 //Configurações
-app.set("port", process.env.PORT || 3000);
+app.set("port", process.env.PORT || 3001);
 //Middlewares
 app.use(express.json());
 
@@ -28,18 +29,7 @@ app.use("/offer", offerRouters);
 app.use("/form", formRouters);
 app.use("/role", roleRouters);
 app.use("/infrastructure", infrastructureRouters);
-
-
-app.use("/teste", (req, res) => {
-  res.send("Rota TESTE.");
-});
-app.use("/", (req, res) => {
-  res.send("Hello World");
-});
-
-// importação de rotas [1]
-
-//Rota
+app.use("/contract", contractRouters);
 
 app.listen(app.get("port"), () => {
   console.log("Start server on port " + app.get("port"));

@@ -1,17 +1,21 @@
-var User = require("../model/User");
-var Offer = require("../model/Offer");
-var Payment = require("../model/Payment");
-var PaymentMethod = require("../model/PaymentMethod");
-var Infrastructure = require("../model/Infrastructure");
-var Role = require("../model/Role");
-var UserRole = require("../model/UserRole");
-var Contract = require("../model/Contract");
-var sequelize = require("../model/database");
+const User = require("../model/User");
+const Offer = require("../model/Offer");
 
 const controller = {};
-//sequelize.sync()
 
 controller.list = async (req, res) => {
+  if (req?.query?.userId) {
+    const data = await Offer.findAll({
+      where: { UserUserId: req.query.userId },
+    })
+      .then(function (data) {
+        return data;
+      })
+      .catch((error) => {
+        return error;
+      });
+  }
+
   const data = await Offer.findAll({
     include: [User],
   })
@@ -26,16 +30,14 @@ controller.list = async (req, res) => {
 
 controller.create = async (req, res) => {
   // data
-  const { quantity, priceEnergy, totalPrice, UserUserId } = req.body;
+  const { quantity, priceEnergy, totalPrice, userId } = req.body;
   const publishDate = new Date();
   const updateDate = new Date();
-  // User.findAll
-  // create
   const data = await Offer.create({
     quantity: quantity,
     priceEnergy: priceEnergy,
     totalPrice: totalPrice,
-    UserUserId: 1,
+    UserUserId: userId,
     publishDate: publishDate,
     updateDate: updateDate,
   })
@@ -62,8 +64,6 @@ controller.update = async (req, res) => {
     });
     return;
   }
-  console.log("------------------");
-  console.log(req.body);
 
   const updateDate = new Date();
 
@@ -79,7 +79,6 @@ controller.update = async (req, res) => {
         where: { offerId: req.body.id },
       }
     );
-    console.log("offerUpdate", offerUpdate);
 
     if (offerUpdate == 1) {
       res.status(200).json({

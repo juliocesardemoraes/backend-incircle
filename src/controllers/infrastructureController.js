@@ -1,9 +1,4 @@
-var User = require("../model/User");
-var Infrastructure = require("../model/Infrastructure");
-var Role = require("../model/Role");
-var UserRole = require("../model/UserRole");
-var sequelize = require("../model/database");
-
+const Infrastructure = require("../model/Infrastructure");
 const controller = {};
 
 controller.create = async (req, res) => {

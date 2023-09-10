@@ -2,7 +2,7 @@ const Infrastructure = require("../model/Infrastructure");
 const Role = require("../model/Role");
 var User = require("../model/User");
 var UserRole = require("../model/UserRole");
-var sequelize = require("../model/database");
+const { cryptoPassword } = require("../utils/passwordHash");
 
 const controller = {};
 
@@ -21,7 +21,6 @@ controller.create = async (req, res) => {
     productionType,
     productionArea,
   } = req.body;
-  console.log("REQ", req.body);
 
   try {
     const roleId = await Role.findAll({ where: { nameRole: role } });
@@ -29,7 +28,7 @@ controller.create = async (req, res) => {
     if (!roleId) {
       res.status(400).json({
         success: false,
-        message: "Perfil não cadastrado",
+        message: "Perfil não registado",
       });
       return;
     }
@@ -37,19 +36,17 @@ controller.create = async (req, res) => {
     const data = await User.create({
       name: name,
       email: email,
-      password: password,
+      password: await cryptoPassword(password),
       address: address,
       codigoPostal: codigoPostal,
       distrito: distrito,
       photo: photo,
     });
-    console.log("USER", data);
 
     const userRole = await UserRole.create({
       UserUserId: data.dataValues.userId,
       RoleRoleId: roleId[0].dataValues.roleId,
     });
-    console.log("USERROLE", data);
 
     const infrastructure = await Infrastructure.create({
       capacity: capacity,
@@ -57,7 +54,6 @@ controller.create = async (req, res) => {
       productionArea: productionArea,
       UserUserId: data.dataValues.userId,
     });
-    console.log("USERROLE", infrastructure);
 
     res.status(200).json({
       success: true,

@@ -1,16 +1,18 @@
-var User = require("../model/User");
-var Offer = require("../model/Offer");
-var Payment = require("../model/Payment");
-var PaymentMethod = require("../model/PaymentMethod");
-var Infrastructure = require("../model/Infrastructure");
-var Role = require("../model/Role");
-var UserRole = require("../model/UserRole");
-var Contract = require("../model/Contract");
-var sequelize = require("../model/database");
+const Role = require("../model/Role");
+const User = require("../model/User");
+const UserRole = require("../model/UserRole");
+const sequelize = require("../model/database");
 const { cryptoPassword, comparePassword } = require("../utils/passwordHash");
 
 const controller = {};
-sequelize.sync();
+sequelize.sync().then(() => {
+  Role.create({
+    nameRole: "vendedor",
+  });
+  Role.create({
+    nameRole: "comprador",
+  });
+});
 
 controller.list = async (req, res) => {
   const data = await User.findAll({})
@@ -20,7 +22,7 @@ controller.list = async (req, res) => {
     .catch((error) => {
       return error;
     });
-  res.json({ success: true, data: data });
+  return res.json({ success: true, data: data });
 };
 
 controller.create = async (req, res) => {
@@ -54,7 +56,7 @@ controller.create = async (req, res) => {
       return error;
     });
   // return res
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: "Registado",
     data: data,
@@ -65,18 +67,18 @@ controller.delete = async (req, res) => {
   try {
     const deleteUser = await User.destroy({ where: { email: req.body.email } });
     if (deleteUser == 1) {
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         message: "Utilizador deletado com sucesso!",
       });
     } else if (deleteUser == 0) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         message: "Requisição má formulada. Utilizador pode não existir",
       });
     }
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Erro no servidor",
     });
@@ -84,16 +86,46 @@ controller.delete = async (req, res) => {
 };
 
 controller.auth = async (req, res) => {
-  const user = await User.findOne({ where: { email: req.body.email } });
-  const isEqual = await comparePassword(req.body.password, user.password);
+  if (!req.query.email || !req.query.password) {
+    return res.status(400).json({
+      success: false,
+      message: "Usuário ou senha faltantes",
+    });
+  }
+
+  const user = await User.findOne({ where: { email: req.query.email } });
+  const userRole = await UserRole.findOne({
+    where: { UserUserId: user.dataValues.userId },
+  });
+
+  if (!userRole?.dataValues?.RoleRoleId) {
+    return res.status(500).json({
+      success: false,
+      message: "Usuário inválido, não possue role",
+    });
+  }
+
+  const role = await Role.findOne({
+    where: { roleId: userRole.dataValues.RoleRoleId },
+  });
+
+  if (!user) {
+    return res.status(403).json({
+      success: false,
+      message: "Usuário ou senha Inválidos",
+    });
+  }
+  const isEqual = await comparePassword(req.query.password, user.password);
 
   if (isEqual) {
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Acesso permitido!",
+      role: role.dataValues.nameRole,
+      userId: user.userId,
     });
   } else {
-    res.status(503).json({
+    return res.status(403).json({
       success: false,
       message: "Acesso Inválido",
     });

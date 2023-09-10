@@ -1,30 +1,33 @@
-var Sequelize = require('sequelize');
-var sequelize = require('./database');
+var Sequelize = require("sequelize");
+var sequelize = require("./database");
 
-const User = require('./User');
-const Offer = require('./Offer');
+const User = require("./User");
+const Offer = require("./Offer");
 
-const Contract = sequelize.define('contract', {
-  contractID: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
+const Contract = sequelize.define(
+  "contract",
+  {
+    contractID: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    contractDate: Sequelize.DATE,
+    contractDetails: Sequelize.JSON,
+    sellerInfo: Sequelize.JSON,
+    buyerInfo: Sequelize.JSON,
+    status: Sequelize.STRING,
   },
-  contractDate: Sequelize.DATE,
-  contractDetails: Sequelize.STRING,
-  status: Sequelize.STRING
-
-}, {
-  timestamps: false
-});
+  {
+    timestamps: false,
+  }
+);
 
 Contract.belongsTo(Offer);
 Offer.hasMany(Contract);
-Contract.belongsTo(User, {foreignKey: {name:'sellerId'}});
-User.hasMany(Contract, {foreignKey: {name:'sellerId'}});
-Contract.belongsTo(User, {foreignKey: {name:'buyerId'}});
-User.hasMany(Contract, {foreignKey: {name:'buyerId'}});
-
-
+Contract.belongsTo(User, { foreignKey: { name: "sellerId" } });
+User.hasMany(Contract, { foreignKey: { name: "sellerId" } });
+Contract.belongsTo(User, { foreignKey: { name: "buyerId" } });
+User.hasMany(Contract, { foreignKey: { name: "buyerId" } });
 
 module.exports = Contract;

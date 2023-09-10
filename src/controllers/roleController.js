@@ -1,17 +1,27 @@
 const Role = require("../model/Role");
-var User = require("../model/User");
-var sequelize = require("../model/database");
 
 const controller = {};
 
+controller.list = async (req, res) => {
+  try {
+    const data = await Role.findAll({});
+    res.status(200).json({
+      ...data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Erro ao tentar achar roles",
+    });
+  }
+};
+
 controller.create = async (req, res) => {
   const { nameRole } = req.body;
-  console.log("AQUII", nameRole);
   try {
     const data = await Role.create({
       nameRole: nameRole,
     });
-    console.log("DATA", data);
     res.status(200).json({
       name: nameRole,
       success: true,
